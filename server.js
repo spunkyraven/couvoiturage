@@ -1,6 +1,6 @@
 const express = require("express");
 const connectDB = require("./config/connectDB");
-
+const patch = require("path");
 require("dotenv").config();
 // --------------------------------------------------------
 const app = express();
@@ -18,9 +18,19 @@ app.use("/api/trip", require("./router/tripRoutes"));
 app.use("/admin", require("./router/admin.router"));
 
 //production
+
+id(process.env.NODE_ENV === "production");
+{
+  app.use(express.static("client/build"));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
+}
+
 //////////////////////////
 
 // create server
+
 // port
 const PORT = process.env.PORT;
 
