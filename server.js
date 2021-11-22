@@ -1,6 +1,6 @@
 const express = require("express");
 const connectDB = require("./config/connectDB");
-const patch = require("path");
+const config = require("config");
 require("dotenv").config();
 // --------------------------------------------------------
 const app = express();
@@ -17,8 +17,7 @@ app.use("/api/user", require("./router/userRoutes"));
 app.use("/api/trip", require("./router/tripRoutes"));
 app.use("/admin", require("./router/admin.router"));
 
-production;
-if (config.get("HEROKU_CONFIG.NODE_ENV") === "production") {
+if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 
