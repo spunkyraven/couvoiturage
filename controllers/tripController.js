@@ -1,4 +1,5 @@
 const Trip = require("../models/Trip");
+const Reservation = require("../models/Reservation");
 const { validationResult } = require("express-validator");
 
 //Post Trip
@@ -127,6 +128,25 @@ const findTrips = async (req, res) => {
   }
 };
 //Get One Trip
+const getreservedTrip = async (req, res) => {
+  try {
+    const search = await Reservation.find({
+      idReservation: req.userId,
+    });
+
+    const selectedTrip = await Trip.find().select({ __v: 0 }).populate({
+      path: "owner",
+      select: "created_at role _id firstName lastName profilePic age phone",
+    });
+    const p = [];
+    for (i of search)
+      p.push(selectedTrip.find((owner) => (owner = i["idOffre"])));
+    console.log(p);
+    res.json(p);
+  } catch (err) {
+    res.status(500).json({ errors: [{ msg: err.message }] });
+  }
+};
 const getSelectedTrip = async (req, res) => {
   try {
     const selectedTrip = await Trip.findOne({ _id: req.params.id })
@@ -188,7 +208,12 @@ const updateSeatingCapacity = async (req, res) => {
       { ...req.body },
       { new: true }
     );
+    const newReservation = new Reservation({
+      idReservation: req.userId,
+      idOffre: req.params.id,
+    });
     res.json(updatedSeatingCapacity);
+    newReservation.save();
   } catch (err) {
     res.status(500).json({ errors: [{ msg: err.message }] });
   }
@@ -199,6 +224,7 @@ module.exports = {
   getAllTrips,
   getTripsCount,
   getMyTrip,
+  getreservedTrip,
   getSelectedTrip,
   updateTrip,
   deleteTrip,

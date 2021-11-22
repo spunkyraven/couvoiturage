@@ -111,16 +111,7 @@ const getUserProfile = async (req, res) => {
 const editProfile = async (req, res) => {
   try {
     //profile pic saved on cloudinary
-    if (req.body.profilePic) {
-      const savedImage = await cloudinary.uploader.upload(req.body.profilePic, {
-        timeout: 60000,
-        upload_preset: "couvoiturage",
-      });
-      req.body.profilePic = {
-        url: savedImage.url,
-        public_id: savedImage.public_id,
-      };
-    }
+
     const updatedProfile = await User.findByIdAndUpdate(
       req.params.id,
       { ...req.body },

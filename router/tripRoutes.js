@@ -21,6 +21,11 @@ router.get(
   tokenMiddleware,
   tripController.getSelectedTrip
 );
+router.get(
+  "/getreservedTrip/:id",
+  tokenMiddleware,
+  tripController.getreservedTrip
+);
 router.put(
   "/updateSeatingCapacity/:id",
   tokenMiddleware,
